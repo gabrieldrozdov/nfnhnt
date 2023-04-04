@@ -1,0 +1,246 @@
+/* Base styles */
+@font-face {
+	font-family: caffeine;
+	src: url(../assets/fonts/caffeine.woff2);
+}
+@font-face {
+	font-family: goudy;
+	src: url(../assets/fonts/GoudyBookletter1911-Regular.ttf);
+}
+@font-face {
+	font-family: limkin;
+	src: url(../assets/fonts/limkin.ttf);
+}
+:root {
+	--imgsize: 50vh;
+}
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+	cursor: none;
+}
+html {
+	font-size: 12px;
+}
+body {
+	font-family: limkin, serif;
+	background-color: black;
+	color: white;
+}
+
+/* Webpage container with prefix */
+.walk-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
+/* Overlays */
+.grain {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 120vw;
+	height: 120vh;
+	animation-name: grain;
+	animation-duration: .5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: steps(4);
+	mix-blend-mode: luminosity;
+	opacity: 0.15;
+	pointer-events: none;
+	z-index: 999;
+}
+@keyframes grain {
+	0% {
+		left: -20vw;
+		top: -20vh;
+	}
+	33% {
+		left: 0vw;
+		top: -20vh;
+	}
+	66% {
+		left: 0vw;
+		top: 0vh;
+	}
+	100% {
+		left: -20vw;
+		top: 0vh;
+	}
+}
+.vignette {
+	z-index: 99;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%);
+}
+
+/* Mouse cursor */
+.walk-cursor {
+	font-family: caffeine;
+	position: absolute;
+	font-size: 32px;
+	z-index: 99999;
+	pointer-events: none;
+	transition: filter .2s;
+	user-select: none;
+	left: 50%;
+	top: 50%;
+}
+.walk-cursor span {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.walk-cursor-default {
+	transform: translate(-10%, -10%) !important;
+}
+.walk-cursor[data-step="0"] .walk-cursor-default {
+	display: block;
+}
+.walk-cursor[data-step="1"] .walk-cursor-left {
+	display: block;
+}
+.walk-cursor[data-step="2"] .walk-cursor-right {
+	display: block;
+}
+
+/* Text */
+.walk-text {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	z-index: 99;
+	top: 0;
+	left: 0;
+	font-size: 24px;
+	line-height: 1.5em;
+	letter-spacing: .05em;
+}
+.walk-text p {
+	position: absolute;
+	transition: opacity 1s;
+	opacity: 0;
+}
+.walk-text-line {
+	display: block;
+	opacity: 0;
+	transition: opacity 1s;
+}
+.walk-text-center {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+.walk-text-top {
+	top: 8vh;
+	left: 50%;
+	transform: translate(-50%, 0);
+	pointer-events: none;
+	text-align: center;
+}
+.walk-text-bottom {
+	bottom: 8vh;
+	left: 50%;
+	transform: translate(-50%, 0);
+	pointer-events: none;
+	text-align: center;
+}
+.walk-text-left {
+	top: 50%;
+	right: 62.5%;
+	min-width: 15vw;
+	transform: translate(0, -50%);
+	pointer-events: none;
+	text-align: right;
+}
+.walk-text-right {
+	top: 50%;
+	left: 62.5%;
+	min-width: 15vw;
+	transform: translate(0, -50%);
+	pointer-events: none;
+	text-align: left;
+}
+.walk-text-break {
+	height: .6em;
+	display: block;
+}
+.walk-text .walk-text-byhand {
+	font-family: caffeine;
+	letter-spacing: 0;
+	font-size: 1.2em;
+}
+
+/* Steps */
+.walk-steps {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 9;
+	pointer-events: none;
+	transition: transform .6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.walk-steps-child {
+	transition: transform .6s cubic-bezier(0.22, 1, 0.36, 1), filter .2s, opacity .5s;
+	position: absolute;
+	width: 0;
+	height: 0;
+}
+.walk-steps-child-img {
+	height: var(--imgsize);
+	box-shadow: 0 0 100px rgba(0,0,0,1);
+}
+
+
+.walk-intro-options {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	margin-top: 20px;
+	gap: 10px;
+}
+.walk-button {
+	padding: 40px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: opacity .2s;
+}
+.walk-button-background {
+	position: absolute;
+	border-radius: 25%;
+	width: 100%;
+	height: 100%;
+	filter: blur(10px);
+	background: white;
+	opacity: 0;
+	transition: opacity .5s;
+	z-index: -1;
+}
+.walk-button:hover .walk-button-background {
+	opacity: 1;
+}
+.walk-button:active .walk-button-background {
+	opacity: .5;
+}
+.walk-button:hover .walk-button-text {
+	color: black;
+}
+.walk-button-text {
+	color: white;
+	transition: color .5s;
+}
