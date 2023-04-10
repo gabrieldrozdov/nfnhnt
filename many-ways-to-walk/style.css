@@ -32,8 +32,7 @@ body {
 	overflow: hidden;
 	pointer-events: none;
 	transition: opacity .5s;
-	filter: blur(2px);
-	/* animation: walk-container 1s infinite alternate ease-in-out; */
+	animation: walk-container 1s infinite alternate ease-in-out;
 }
 .walk-images {
 	position: fixed;
@@ -43,15 +42,14 @@ body {
 	height: 100vh;
 	background-position: 50% 50%;
 	background-size: cover;
-	/* filter: blur(2px) brightness(80%); */
-	transition: background-image 200ms, filter 200ms, opacity 200ms;
+	transition: background-image 200ms, opacity 200ms;
 }
 @keyframes walk-container {
 	from {
-		filter: blur(4px) brightness(60%);
+		filter: brightness(60%);
 	}
 	to {
-		filter: blur(2px) brightness(80%);
+		filter: brightness(80%);
 	}
 }
 .walk-preload {
@@ -75,7 +73,7 @@ body {
 	animation-iteration-count: infinite;
 	animation-timing-function: steps(3);
 	mix-blend-mode: luminosity;
-	opacity: 0.2;
+	opacity: 0.1;
 	pointer-events: none;
 	z-index: 999;
 }

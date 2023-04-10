@@ -370,9 +370,9 @@ function walkStepNext() {
 			let toZero = (preloadedSteps1.length-stepPath1)/transitionRange;
 			let toOne = Math.abs(preloadedSteps1.length-stepPath1-transitionRange)/transitionRange;
 			walkDOM1.style.opacity = toZero;
-			walkDOM1.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*50}px)`;
+			walkDOM1.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*25}px)`;
 			walkDOM2.style.opacity = toOne;
-			walkDOM2.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*50}px)`;
+			walkDOM2.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*25}px)`;
 
 			// Sound transition
 			walkFootstep1Vel = toZero;
@@ -394,9 +394,9 @@ function walkStepNext() {
 			let toZero = (preloadedSteps2.length-stepPath2)/transitionRange;
 			let toOne = Math.abs(preloadedSteps2.length-stepPath2-transitionRange)/transitionRange;
 			walkDOM2.style.opacity = toZero;
-			walkDOM2.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*50}px)`;
+			walkDOM2.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*25}px)`;
 			walkDOM1.style.opacity = toOne;
-			walkDOM1.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*50}px)`;
+			walkDOM1.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*25}px)`;
 
 			// Sound transition
 			walkFootstep2Vel = toZero;
@@ -693,7 +693,7 @@ async function walkSequence() {
 
 
 	loop = setInterval(() => {
-		if (walkStepCount > 150) {
+		if (walkStepCount > 250) {
 			walkResolveTrigger();
 			clearInterval(loop);
 		}
@@ -703,7 +703,7 @@ async function walkSequence() {
 
 	walkContainer.style.opacity = .2;
 	walkTextCenter.innerHTML = `
-		<span class='walk-text-line'>There are many ways to <span class="walk-text-byhand">take a walk.</span></span>
+		<span class='walk-text-line'><span class="walk-text-byhand">There are many ways to take a walk.</span></span>
 	`;
 	byhandShuffle(walkTextCenter);
 	walkTextLineFade(walkTextCenter, 2500);
@@ -723,7 +723,7 @@ async function walkSequence() {
 	await walkResolveAfterDelay(2500);
 	let vignette = document.querySelector(".vignette");
 	let walkRhythmStart = false;
-	loop = setInterval(() => {
+	let rhythmLoop = setInterval(() => {
 		vignette.style.transition = "unset";
 		vignette.style.filter = "invert(50%)";
 		setTimeout(() => {
@@ -741,9 +741,9 @@ async function walkSequence() {
 			setTimeout(() => {
 				walkControls.style.pointerEvents = "all";
 				walkContainer.style.opacity = 1;
-			}, 800)
+			}, 600)
 		}
-	}, 1000)
+	}, 800);
 	await walkResolveAfterDelay(8000);
 	walkTextClear(walkTextTop);
 	walkTextClear(walkTextBottom);
@@ -763,6 +763,14 @@ async function walkSequence() {
 	await walkResolveAfterDelay(8000);
 	walkTextClear(walkTextLeft);
 	walkTextClear(walkTextRight);
+	loop = setInterval(() => {
+		if (walkStepCount > 500) {
+			walkResolveTrigger();
+			clearInterval(rhythmLoop);
+			clearInterval(loop);
+		}
+	}, 20);
+	await walkResolveCheck();
 }
 
 walkSequence();

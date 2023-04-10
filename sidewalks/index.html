@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>There are many ways to take a walk.</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="icon" type="image/png" href="../assets/ui/favicon.png" />
+
+	<!-- Tone.js for audio -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+</head>
+<body>
+	<!-- Overlays -->
+	<img src="../assets/ui/grain.jpg" class="grain">
+	<div class="vignette"></div>
+
+	<!-- Mouse cursor -->
+	<div class="walk-cursor walk-text-byhand" data-step="0">
+		<span class="walk-cursor-default">&#8598;</span>
+		<span class="walk-cursor-left">&#8224;</span>
+		<span class="walk-cursor-right">&#8225;</span>
+	</div>
+	
+	<!-- Text -->
+	<div class="walk-text">
+		<p class="walk-text-center">
+			I’d like you to read a poem<br>
+			about what it feels like<br>
+			to walk through a place.
+		</p>
+		<p class="walk-text-top"></p>
+		<p class="walk-text-bottom"></p>
+		<p class="walk-text-left"></p>
+		<p class="walk-text-right"></p>
+	</div>
+
+	<!-- Main content -->
+	<main class="walk-container">
+		
+		<!-- Container for images of steps -->
+		<div class="walk-steps"></div>
+
+		<!-- Container for images of steps -->
+		<div class="walk-background"></div>
+	</main>
+
+	<script src="script.js"></script>
+</body>
+</html>
