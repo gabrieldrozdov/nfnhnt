@@ -4,15 +4,8 @@
 	src: url(../assets/fonts/caffeine.woff2);
 }
 @font-face {
-	font-family: goudy;
-	src: url(../assets/fonts/GoudyBookletter1911-Regular.ttf);
-}
-@font-face {
 	font-family: limkin;
 	src: url(../assets/fonts/limkin.ttf);
-}
-:root {
-	--imgsize: 50vh;
 }
 * {
 	box-sizing: border-box;
@@ -30,7 +23,6 @@ body {
 	color: white;
 }
 
-/* Webpage container with prefix */
 .walk-container {
 	position: fixed;
 	top: 0;
@@ -38,6 +30,34 @@ body {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
+	pointer-events: none;
+	animation: walk-container 1s infinite alternate ease-in-out;
+}
+.walk-images {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-position: 50% 50%;
+	background-size: cover;
+	transition: background-image 200ms, filter 200ms, opacity 200ms;
+}
+@keyframes walk-container {
+	from {
+		filter: blur(4px) brightness(60%);
+	}
+	to {
+		filter: blur(2px) brightness(80%);
+	}
+}
+.walk-preload {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	width: 0;
+	height: 0;
 }
 
 /* Overlays */
@@ -50,9 +70,9 @@ body {
 	animation-name: grain;
 	animation-duration: .5s;
 	animation-iteration-count: infinite;
-	animation-timing-function: steps(4);
+	animation-timing-function: steps(3);
 	mix-blend-mode: luminosity;
-	opacity: 0.15;
+	opacity: 0.1;
 	pointer-events: none;
 	z-index: 999;
 }
@@ -83,12 +103,22 @@ body {
 	width: 100vw;
 	height: 100vh;
 	background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%);
+	animation: vignette 4s infinite alternate ease-in-out;
+	transition: filter .5s;
+}
+@keyframes vignette {
+	0% {
+		opacity: .5;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 /* Mouse cursor */
 .walk-cursor {
 	font-family: caffeine;
-	position: absolute;
+	position: fixed;
 	font-size: 32px;
 	z-index: 99999;
 	pointer-events: none;
@@ -106,6 +136,9 @@ body {
 }
 .walk-cursor-default {
 	transform: translate(-10%, -10%) !important;
+}
+.walk-cursor-left, .walk-cursor-right {
+	font-size: 150px;
 }
 .walk-cursor[data-step="0"] .walk-cursor-default {
 	display: block;
@@ -192,20 +225,20 @@ body {
 	left: 50%;
 	z-index: 9;
 	pointer-events: none;
-	transition: transform .6s cubic-bezier(0.22, 1, 0.36, 1);
+	transform: rotate(90deg);
 }
 .walk-steps-child {
-	transition: transform .6s cubic-bezier(0.22, 1, 0.36, 1), filter .2s, opacity .5s;
+	transition: transform .4s cubic-bezier(0.16, 1, 0.3, 1), filter .4s, opacity .2s;
 	position: absolute;
 	width: 0;
 	height: 0;
 }
 .walk-steps-child-img {
 	height: var(--imgsize);
-	box-shadow: 0 0 100px rgba(0,0,0,1);
+	box-shadow: 0 0 100px rgba(0,0,0,.5);
 }
 
-
+/* Dialogues */
 .walk-intro-options {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -243,4 +276,30 @@ body {
 .walk-button-text {
 	color: white;
 	transition: color .5s;
+}
+
+/* Controls */
+.walk-controls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	z-index: 100;
+	pointer-events: none;
+}
+.walk-controls-button {
+	background-color: white;
+	opacity: 0;
+	transition: opacity .2s;
+	filter: blur(100px);
+	border-radius: 50%;
+}
+.walk-controls-button:hover {
+	opacity: .5;
+}
+.walk-controls-button:active {
+	opacity: .2;
 }
