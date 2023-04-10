@@ -101,6 +101,7 @@ function walkCursorStep() {
 
 // Controls
 let walkActiveStep = 0;
+let walkControls = document.querySelector(".walk-controls");
 let walkStepLeft = document.querySelector("#walk-step-left");
 let walkStepRight = document.querySelector("#walk-step-right");
 walkStepLeft.addEventListener("click", walkControlsFlip);
@@ -114,11 +115,11 @@ function walkControlsFlip() {
 	if (walkActiveStep == 0) {
 		walkCursor.dataset.step = 2;
 		walkStepLeft.style.pointerEvents = "none";
-		walkStepRight.style.pointerEvents = "all";
+		walkStepRight.style.pointerEvents = "inherit";
 		walkActiveStep = 1;
 	} else {
 		walkCursor.dataset.step = 1;
-		walkStepLeft.style.pointerEvents = "all";
+		walkStepLeft.style.pointerEvents = "inherit";
 		walkStepRight.style.pointerEvents = "none";
 		walkActiveStep = 0;
 	}
@@ -229,6 +230,10 @@ walkAtmospherePlayer1.volume.value = -10;
 walkAtmospherePlayer2.loop = true;
 walkAtmospherePlayer2.volume.value = -10;
 
+// Rhythm
+let walkRhythm = new Tone.Player(`sound/rhythm.wav`).toDestination();
+walkRhythm.volume.value = -20;
+walkRhythm.connect(walkReverb);
 
 
 // ——————————————————————————————————————————————————————————————————————————————
@@ -311,16 +316,22 @@ let preloadedSteps1 = [];
 let preloadedSteps2 = [];
 function preloadSteps(targetDOM) {
 	let temp = "";
+	let stepDivide = 30;
+	if (activePath1Range > 100) {
+		stepDivide = 50;
+	} else if (activePath1Range > 200) {
+		stepDivide = 80;
+	}
 	if (targetDOM == walkDOM1) {
 		preloadedSteps1 = [];
-		for (let i=0; i<activePath1Range-1; i+=Math.floor(Math.random()*(activePath1Range/50)+1)) {
+		for (let i=0; i<activePath1Range-1; i+=Math.floor(Math.random()*(activePath1Range/stepDivide)+1)) {
 			preloadedSteps1.push(i);
 			temp += `<img src='imgs/${activePath1}/${activePath1}-${i}.jpg'>`;
 		}
 		walkPreload1.innerHTML = temp;
 	} else {
 		preloadedSteps2 = [];
-		for (let i=0; i<activePath2Range-1; i+=Math.floor(Math.random()*(activePath2Range/50)+1)) {
+		for (let i=0; i<activePath2Range-1; i+=Math.floor(Math.random()*(activePath2Range/stepDivide)+1)) {
 			preloadedSteps2.push(i);
 			temp += `<img src='imgs/${activePath2}/${activePath2}-${i}.jpg'>`;
 		}
@@ -359,9 +370,9 @@ function walkStepNext() {
 			let toZero = (preloadedSteps1.length-stepPath1)/transitionRange;
 			let toOne = Math.abs(preloadedSteps1.length-stepPath1-transitionRange)/transitionRange;
 			walkDOM1.style.opacity = toZero;
-			walkDOM1.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*40}px)`;
+			walkDOM1.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*50}px)`;
 			walkDOM2.style.opacity = toOne;
-			walkDOM2.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*40}px)`;
+			walkDOM2.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*50}px)`;
 
 			// Sound transition
 			walkFootstep1Vel = toZero;
@@ -383,9 +394,9 @@ function walkStepNext() {
 			let toZero = (preloadedSteps2.length-stepPath2)/transitionRange;
 			let toOne = Math.abs(preloadedSteps2.length-stepPath2-transitionRange)/transitionRange;
 			walkDOM2.style.opacity = toZero;
-			walkDOM2.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*40}px)`;
+			walkDOM2.style.filter = `brightness(${(toOne+1)*110}%) blur(${toOne*50}px)`;
 			walkDOM1.style.opacity = toOne;
-			walkDOM1.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*40}px)`;
+			walkDOM1.style.filter = `brightness(${(toZero+1)*100}%) blur(${toZero*50}px)`;
 
 			// Sound transition
 			walkFootstep2Vel = toZero;
@@ -484,155 +495,156 @@ function walkResolveTrigger() {
 }
 
 // Main sequence
+let walkContainer = document.querySelector(".walk-container");
 async function walkSequence() {
-	// walkTextCenter.innerHTML = `
-	// 	<span class='walk-text-line'>This is a theater</span>
-	// 	<span class='walk-text-line'>and you are an actor</span>
-	// 	<span class='walk-text-line'>performing in a show.</span>
-	// `;
-	// walkTextLineFade(walkTextCenter, 2500);
-	// await walkResolveAfterDelay(10000);
-	// walkTextClear(walkTextCenter);
-	// await walkResolveAfterDelay(750);
+	walkTextCenter.innerHTML = `
+		<span class='walk-text-line'>This is a theater</span>
+		<span class='walk-text-line'>and you are an actor</span>
+		<span class='walk-text-line'>performing in a show.</span>
+	`;
+	walkTextLineFade(walkTextCenter, 2500);
+	await walkResolveAfterDelay(10000);
+	walkTextClear(walkTextCenter);
+	await walkResolveAfterDelay(750);
 
 
-	// walkTextCenter.innerHTML = `
-	// 	<span class='walk-text-line'>Is that okay with you?</span>
-	// 	<span class='walk-text-line'>
-	// 		<div class='walk-intro-options'>
-	// 			<div class='walk-button' onclick='walkResolveTrigger();'>
-	// 				<div class='walk-button-text walk-text-byhand'>Yes.</div>
-	// 				<div class='walk-button-background'></div>
-	// 			</div>
-	// 			<div class='walk-button' onclick='window.close();'>
-	// 				<div class='walk-button-text walk-text-byhand'>No.</div>
-	// 				<div class='walk-button-background'></div>
-	// 			</div>
-	// 		</div>
-	// 	</span>
-	// `;
-	// byhandShuffle(walkTextCenter);
-	// walkTextLineFade(walkTextCenter, 2500);
-	// await walkResolveCheck();
-	// walkTextClear(walkTextCenter);
-	// await walkResolveAfterDelay(750);
+	walkTextCenter.innerHTML = `
+		<span class='walk-text-line'>Is that okay with you?</span>
+		<span class='walk-text-line'>
+			<div class='walk-intro-options'>
+				<div class='walk-button' onclick='walkResolveTrigger(); walkRhythm.start();'>
+					<div class='walk-button-text walk-text-byhand'>Yes.</div>
+					<div class='walk-button-background'></div>
+				</div>
+				<div class='walk-button' onclick='window.close();'>
+					<div class='walk-button-text walk-text-byhand'>No.</div>
+					<div class='walk-button-background'></div>
+				</div>
+			</div>
+		</span>
+	`;
+	byhandShuffle(walkTextCenter);
+	walkTextLineFade(walkTextCenter, 2500);
+	await walkResolveCheck();
+	walkTextClear(walkTextCenter);
+	await walkResolveAfterDelay(750);
 
 
-	// walkTextCenter.innerHTML = `
-	// 	<span class='walk-text-line'>This show is called:</span>
-	// 	<div class='walk-text-break'></div>
-	// 	<span class='walk-text-line walk-text-byhand'>“There are many ways to take a walk.”</span>
-	// `;
-	// byhandShuffle(walkTextCenter);
-	// walkTextLineFade(walkTextCenter, 2500);
-	// await walkResolveAfterDelay(10000);
-	// walkTextClear(walkTextCenter);
-	// await walkResolveAfterDelay(750);
+	walkTextCenter.innerHTML = `
+		<span class='walk-text-line'>This show is called:</span>
+		<div class='walk-text-break'></div>
+		<span class='walk-text-line walk-text-byhand'>“There are many ways to take a walk.”</span>
+	`;
+	byhandShuffle(walkTextCenter);
+	walkTextLineFade(walkTextCenter, 2500);
+	await walkResolveAfterDelay(10000);
+	walkTextClear(walkTextCenter);
+	await walkResolveAfterDelay(750);
 
 
-	// walkTextCenter.innerHTML = `
-	// 	<span class='walk-text-line'>One way to take a walk is to <span class="walk-text-byhand">take a walk.</span></span>
-	// 	<div class='walk-text-break'></div>
-	// 	<span class='walk-text-line'>If you’d like, you can leave the theater</span>
-	// 	<span class='walk-text-line'>and take a walk.</span>
-	// `;
-	// byhandShuffle(walkTextCenter);
-	// walkTextLineFade(walkTextCenter, 2500);
-	// await walkResolveAfterDelay(10000);
-	// walkTextClear(walkTextCenter);
-	// await walkResolveAfterDelay(750);
+	walkTextCenter.innerHTML = `
+		<span class='walk-text-line'>One way to take a walk is to <span class="walk-text-byhand">take a walk.</span></span>
+		<div class='walk-text-break'></div>
+		<span class='walk-text-line'>If you’d like, you can leave the theater</span>
+		<span class='walk-text-line'>and take a walk.</span>
+	`;
+	byhandShuffle(walkTextCenter);
+	walkTextLineFade(walkTextCenter, 2500);
+	await walkResolveAfterDelay(10000);
+	walkTextClear(walkTextCenter);
+	await walkResolveAfterDelay(750);
 
 
-	// walkTextTop.innerHTML = `
-	// 	<span class='walk-text-line'>Another way to take a walk</span>
-	// `;
-	// let loop = setInterval(() => {
-	// 	walkStepNext();
-	// }, 1000)
-	// walkTextLineFade(walkTextTop, 2500);
-	// await walkResolveAfterDelay(2500);
-	// walkTextBottom.innerHTML = `
-	// 	<span class='walk-text-line'>is to <span class="walk-text-byhand">watch a walk.</span></span>
-	// `;
-	// byhandShuffle(walkTextBottom);
-	// walkTextLineFade(walkTextBottom, 2500);
-	// await walkResolveAfterDelay(5000);
-	// walkTextClear(walkTextTop);
-	// walkTextClear(walkTextBottom);
-	// await walkResolveAfterDelay(750);
+	walkTextTop.innerHTML = `
+		<span class='walk-text-line'>Another way to take a walk</span>
+	`;
+	let loop = setInterval(() => {
+		walkStepNext();
+	}, 1000)
+	walkTextLineFade(walkTextTop, 2500);
+	await walkResolveAfterDelay(2500);
+	walkTextBottom.innerHTML = `
+		<span class='walk-text-line'>is to <span class="walk-text-byhand">watch a walk.</span></span>
+	`;
+	byhandShuffle(walkTextBottom);
+	walkTextLineFade(walkTextBottom, 2500);
+	await walkResolveAfterDelay(5000);
+	walkTextClear(walkTextTop);
+	walkTextClear(walkTextBottom);
+	await walkResolveAfterDelay(750);
 
 
-	// walkTextLeft.innerHTML = `
-	// 	<span class='walk-text-line'>You didn’t take this walk</span>
-	// `;
-	// walkTextLineFade(walkTextLeft, 2500);
-	// await walkResolveAfterDelay(2500);
-	// walkTextRight.innerHTML = `
-	// 	<span class='walk-text-line'>but now you’re taking a walk</span>
-	// `;
-	// walkTextLineFade(walkTextRight, 2500);
-	// await walkResolveAfterDelay(2500);
-	// walkTextBottom.innerHTML = `
-	// 	<span class='walk-text-line walk-text-byhand'>through this walk.</span>
-	// `;
-	// byhandShuffle(walkTextBottom);
-	// walkTextLineFade(walkTextBottom, 2500);
-	// await walkResolveAfterDelay(5000);
-	// walkTextClear(walkTextLeft);
-	// walkTextClear(walkTextRight);
-	// walkTextClear(walkTextBottom);
-	// await walkResolveAfterDelay(750);
-	// clearInterval(loop);
-	// await walkResolveAfterDelay(1000);
+	walkTextLeft.innerHTML = `
+		<span class='walk-text-line'>You didn’t take this walk</span>
+	`;
+	walkTextLineFade(walkTextLeft, 2500);
+	await walkResolveAfterDelay(2500);
+	walkTextRight.innerHTML = `
+		<span class='walk-text-line'>but now you’re taking a walk</span>
+	`;
+	walkTextLineFade(walkTextRight, 2500);
+	await walkResolveAfterDelay(2500);
+	walkTextBottom.innerHTML = `
+		<span class='walk-text-line walk-text-byhand'>through this walk.</span>
+	`;
+	byhandShuffle(walkTextBottom);
+	walkTextLineFade(walkTextBottom, 2500);
+	await walkResolveAfterDelay(5000);
+	walkTextClear(walkTextLeft);
+	walkTextClear(walkTextRight);
+	walkTextClear(walkTextBottom);
+	await walkResolveAfterDelay(750);
+	clearInterval(loop);
+	await walkResolveAfterDelay(1000);
 
 
-	// walkTextTop.innerHTML = `
-	// 	<span class='walk-text-line'>A walk can be <span class="walk-text-byhand">hasty</span></span>
-	// `;
-	// byhandShuffle(walkTextTop);
-	// walkTextLineFade(walkTextTop, 2500);
-	// await walkResolveAfterDelay(1000);
-	// loop = setInterval(() => {
-	// 	walkStepNext();
-	// }, 350)
-	// await walkResolveAfterDelay(5000);
-	// walkTextClear(walkTextTop);
-	// clearInterval(loop);
-	// walkTextBottom.innerHTML = `
-	// 	<span class='walk-text-line'>or <span class="walk-text-byhand">unhurried</span></span>
-	// `;
-	// byhandShuffle(walkTextBottom);
-	// walkTextLineFade(walkTextBottom, 2500);
-	// loop = setInterval(() => {
-	// 	walkStepNext();
-	// }, 2500)
-	// await walkResolveAfterDelay(10000);
-	// walkTextClear(walkTextBottom);
-	// clearInterval(loop);
-	// walkTextLeft.innerHTML = `
-	// 	<span class='walk-text-line'>or</span>
-	// `;
-	// walkTextLineFade(walkTextLeft, 2500);
-	// await walkResolveAfterDelay(1000);
-	// loop = setInterval(() => {
-	// 	walkStepNext();
-	// 	setTimeout(() => {
-	// 		walkStepNext();
-	// 	}, 200)
-	// }, 1000)
-	// await walkResolveAfterDelay(500);
-	// walkTextRight.innerHTML = `
-	// 	<span class='walk-text-line walk-text-byhand'>irregular.</span>
-	// `;
-	// byhandShuffle(walkTextRight);
-	// walkTextLineFade(walkTextRight, 2500);
-	// await walkResolveAfterDelay(7000);
-	// walkTextClear(walkTextLeft);
-	// walkTextClear(walkTextRight);
-	// await walkResolveAfterDelay(1000);
-	// clearInterval(loop);
+	walkTextTop.innerHTML = `
+		<span class='walk-text-line'>A walk can be <span class="walk-text-byhand">hasty</span></span>
+	`;
+	byhandShuffle(walkTextTop);
+	walkTextLineFade(walkTextTop, 2500);
+	await walkResolveAfterDelay(1000);
+	loop = setInterval(() => {
+		walkStepNext();
+	}, 350)
+	await walkResolveAfterDelay(5000);
+	walkTextClear(walkTextTop);
+	clearInterval(loop);
+	walkTextBottom.innerHTML = `
+		<span class='walk-text-line'>or <span class="walk-text-byhand">unhurried</span></span>
+	`;
+	byhandShuffle(walkTextBottom);
+	walkTextLineFade(walkTextBottom, 2500);
+	loop = setInterval(() => {
+		walkStepNext();
+	}, 2500)
+	await walkResolveAfterDelay(10000);
+	walkTextClear(walkTextBottom);
+	clearInterval(loop);
+	walkTextLeft.innerHTML = `
+		<span class='walk-text-line'>or</span>
+	`;
+	walkTextLineFade(walkTextLeft, 2500);
+	await walkResolveAfterDelay(1000);
+	loop = setInterval(() => {
+		walkStepNext();
+		setTimeout(() => {
+			walkStepNext();
+		}, 200)
+	}, 1000)
+	await walkResolveAfterDelay(500);
+	walkTextRight.innerHTML = `
+		<span class='walk-text-line walk-text-byhand'>irregular.</span>
+	`;
+	byhandShuffle(walkTextRight);
+	walkTextLineFade(walkTextRight, 2500);
+	await walkResolveAfterDelay(7000);
+	walkTextClear(walkTextLeft);
+	walkTextClear(walkTextRight);
+	await walkResolveAfterDelay(1000);
+	clearInterval(loop);
 
-
+	walkContainer.style.opacity = .2;
 	walkTextCenter.innerHTML = `
 		<span class='walk-text-line'>But usually</span>
 		<span class='walk-text-line'>walks are taken</span>
@@ -645,22 +657,115 @@ async function walkSequence() {
 	await walkResolveAfterDelay(750);
 
 
-	let walkControls = document.querySelector(".walk-controls");
 	walkControls.style.pointerEvents = "all";
+	walkContainer.style.opacity = 1;
+	walkStepLeft.addEventListener("click", walkResolveTrigger);
+	walkTextLeft.innerHTML = `
+		<span class='walk-text-line'>Step with your <span class="walk-text-byhand">left foot.</span></span>
+	`;
+	byhandShuffle(walkTextLeft);
+	walkTextLineFade(walkTextLeft, 2500);
+	await walkResolveCheck();
+	walkStepLeft.removeEventListener("click", walkResolveTrigger);
+	walkTextClear(walkTextLeft);
+	walkStepRight.addEventListener("click", walkResolveTrigger);
+	walkTextRight.innerHTML = `
+		<span class='walk-text-line'>Now your <span class="walk-text-byhand">right foot.</span></span>
+	`;
+	byhandShuffle(walkTextRight);
+	walkTextLineFade(walkTextRight, 2500);
+	await walkResolveCheck();
+	walkStepRight.removeEventListener("click", walkResolveTrigger);
+	walkTextClear(walkTextRight);
+	walkTextTop.innerHTML = `
+		<span class='walk-text-line'>Keep going.</span>
+	`;
+	walkTextLineFade(walkTextTop, 2500);
+	await walkResolveAfterDelay(3000);
+	walkTextBottom.innerHTML = `
+		<span class='walk-text-line'><span class="walk-text-byhand">Left, right, left, right.</span></span>
+	`;
+	byhandShuffle(walkTextBottom);
+	walkTextLineFade(walkTextBottom, 2500);
+	await walkResolveAfterDelay(6000);
+	walkTextClear(walkTextTop);
+	walkTextClear(walkTextBottom);
 
+
+	loop = setInterval(() => {
+		if (walkStepCount > 150) {
+			walkResolveTrigger();
+			clearInterval(loop);
+		}
+	}, 20);
+	await walkResolveCheck();
+	walkControls.style.pointerEvents = "none";
+
+	walkContainer.style.opacity = .2;
+	walkTextCenter.innerHTML = `
+		<span class='walk-text-line'>There are many ways to <span class="walk-text-byhand">take a walk.</span></span>
+	`;
+	byhandShuffle(walkTextCenter);
+	walkTextLineFade(walkTextCenter, 2500);
+	await walkResolveAfterDelay(6000);
+	walkTextClear(walkTextCenter);
+	walkTextTop.innerHTML = `
+		<span class='walk-text-line'>One way to take a walk</span>
+	`;
+	byhandShuffle(walkTextTop);
+	walkTextLineFade(walkTextTop, 2500);
+	await walkResolveAfterDelay(3000);
+	walkTextBottom.innerHTML = `
+		<span class='walk-text-line'>is to feel its <span class="walk-text-byhand">rhythm.</span></span>
+	`;
+	byhandShuffle(walkTextBottom);
+	walkTextLineFade(walkTextBottom, 2500);
+	await walkResolveAfterDelay(2500);
 	let vignette = document.querySelector(".vignette");
-	setInterval(() => {
+	let walkRhythmStart = false;
+	loop = setInterval(() => {
 		vignette.style.transition = "unset";
 		vignette.style.filter = "invert(50%)";
 		setTimeout(() => {
 			vignette.style.transition = "filter .5s";
 			vignette.style.filter = "invert(0%)";
+			walkRhythm.start();
 		}, 50)
+		if (walkRhythmStart == true) {
+			walkControls.style.pointerEvents = "all";
+			walkContainer.style.opacity = 1;
+			setTimeout(() => {
+				walkControls.style.pointerEvents = "none";
+				walkContainer.style.opacity = .8;
+			}, 250)
+			setTimeout(() => {
+				walkControls.style.pointerEvents = "all";
+				walkContainer.style.opacity = 1;
+			}, 800)
+		}
 	}, 1000)
+	await walkResolveAfterDelay(8000);
+	walkTextClear(walkTextTop);
+	walkTextClear(walkTextBottom);
+	walkTextLeft.innerHTML = `
+		<span class='walk-text-line'>Listen to this <span class="walk-text-byhand">beat.</span></span>
+	`;
+	byhandShuffle(walkTextLeft);
+	walkTextLineFade(walkTextLeft, 2500);
+	await walkResolveAfterDelay(3000);
+	walkTextRight.innerHTML = `
+		<span class='walk-text-line'>Step to that <span class="walk-text-byhand">tempo.</span></span>
+	`;
+	byhandShuffle(walkTextRight);
+	walkTextLineFade(walkTextRight, 2500);
+	await walkResolveAfterDelay(3000);
+	walkRhythmStart = true;
+	await walkResolveAfterDelay(8000);
+	walkTextClear(walkTextLeft);
+	walkTextClear(walkTextRight);
 }
 
 walkSequence();
-
 
 
 // ——————————————————————————————————————————————————————————————————————————————
@@ -679,16 +784,16 @@ function tempScroll(event) {
 }
 
 // Arrow key controls (for dev testing)
-// body.addEventListener("keydown", checkKey);
-// function checkKey(e) {
-//     e = e || window.event;
-//     if (e.keyCode == '38') { // up arrow
-// 		walkStepNext();
-//     }
-//     else if (e.keyCode == '40') { // down arrow
-//     }
-//     else if (e.keyCode == '37') { // left arrow
-//     }
-//     else if (e.keyCode == '39') { // right arrow
-//     }
-// }
+body.addEventListener("keydown", checkKey);
+function checkKey(e) {
+    e = e || window.event;
+    if (e.keyCode == '38') { // up arrow
+		walkStepNext();
+    }
+    else if (e.keyCode == '40') { // down arrow
+    }
+    else if (e.keyCode == '37') { // left arrow
+    }
+    else if (e.keyCode == '39') { // right arrow
+    }
+}

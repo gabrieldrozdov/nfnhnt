@@ -31,7 +31,9 @@ body {
 	height: 100vh;
 	overflow: hidden;
 	pointer-events: none;
-	animation: walk-container 1s infinite alternate ease-in-out;
+	transition: opacity .5s;
+	filter: blur(2px);
+	/* animation: walk-container 1s infinite alternate ease-in-out; */
 }
 .walk-images {
 	position: fixed;
@@ -41,6 +43,7 @@ body {
 	height: 100vh;
 	background-position: 50% 50%;
 	background-size: cover;
+	/* filter: blur(2px) brightness(80%); */
 	transition: background-image 200ms, filter 200ms, opacity 200ms;
 }
 @keyframes walk-container {
@@ -72,7 +75,7 @@ body {
 	animation-iteration-count: infinite;
 	animation-timing-function: steps(3);
 	mix-blend-mode: luminosity;
-	opacity: 0.1;
+	opacity: 0.2;
 	pointer-events: none;
 	z-index: 999;
 }
@@ -103,7 +106,7 @@ body {
 	width: 100vw;
 	height: 100vh;
 	background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%), linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 20%);
-	animation: vignette 4s infinite alternate ease-in-out;
+	/* animation: vignette 4s infinite alternate ease-in-out; */
 	transition: filter .5s;
 }
 @keyframes vignette {
@@ -161,6 +164,7 @@ body {
 	font-size: 24px;
 	line-height: 1.5em;
 	letter-spacing: .05em;
+	text-shadow: 0px 5px 10px black;
 }
 .walk-text p {
 	position: absolute;
