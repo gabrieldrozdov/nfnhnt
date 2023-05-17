@@ -3,50 +3,31 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no">
 	<title>Notes From Neither Here Nor There</title>
 	<link rel="stylesheet" href="style.css">
-	<link rel="icon" type="image/png" href="assets/ui/favicon.png" />
 </head>
 <body>
-	<!-- Overlays -->
-	<img src="assets/ui/grain.jpg" class="grain">
-	<div class="vignette"></div>
-
-	<header>
-		<div class="header-vignette"></div>
-		<div class="header-arrows byhand-animate"></div>
-		<h1 class="title byhand-shuffle byhand-animate">
-			Notes From Neither Here Nor There
-		</h1>
-	</header>
-
-	<div class="home-container">
-		<p>
-			You are here.
-		</p>
-		<p>
-			Or rather, here for you, there for me.
-		</p>
-		<p>
-			It’s a little bit of here for both of us. This is a website, which is a sort of place, and it’s something we can share. So even if I’m here, and you’re there, we’re almost together.
-		</p>
-		<p>
-			It’s a little bit of there for both of us, too. This website is somewhere else, hosted on a computer in a datacenter. So even if you’re here, and I’m here, neither of us are fully there.
-		</p>
-		<p>
-			It’s not too hard to think about websites in these terms. You might disagree. If you’re at least my age, you grew up in a world without websites, and then one with websites. But if you’re younger, maybe websites are more embedded in your worldview, or maybe they’re passé. But no matter your age, websites are things you navigate to and explore within.
-		</p>
-		<p>
-			Real places are like that, too. Are websites real places?
-		</p>
-		<p>
-			When you visit a place, you might take photos of it. And when you leave a place, you might revisit those photos. You might recall memories of being there. It might feel like you’re back there. But you’re not, although you’re not here anymore, either.
-		</p>
-		<p>
-			This website is one of those in-between places. You might forget where you are, neither here nor there. You might forget that this is a website. You might forget where you’re sitting, or who you’re sitting with. You might see an image and feel yourself in it. Or you might feel nothing at all.
-		</p>
-	</div>
+	<main id="container">
+		<div id="ui">
+			<div class="ui-x ui0">0</div>
+			<div class="ui-y ui1">0</div>
+			<div class="ui-velX ui0">0</div>
+			<div class="ui-velY ui1">0</div>
+			<div class="ui-targetVelX ui0">0</div>
+			<div class="ui-targetVelY ui1">0</div>
+			<div class="ui-scale ui0">1</div>
+		</div>
+		<div id="background-n" class="background-gradient"></div>
+		<div id="background-e" class="background-gradient"></div>
+		<div id="background-s" class="background-gradient"></div>
+		<div id="background-w" class="background-gradient"></div>
+		<div id="trackers"></div>
+		<div id="vignette"></div>
+		<div id="content">
+			<div id="paths"></div>
+		</div>
+	</main>
 	
 	<script src="script.js"></script>
 </body>
