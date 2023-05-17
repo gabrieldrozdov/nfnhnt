@@ -28,25 +28,22 @@ let mult = 1;
 let range = .2; // margin from window perimeter for mouse detection (0–1)
 let pos = [0, 0]; // x, y;
 let pause = false;
-let floaterCount = 50;
 let floaters = {};
 let zoomLevel = 1;
 
 // Floater class
-let floaterIndex = 0;
 class Floater {
-	constructor(id, src) {
-		this.id = floaterIndex;
-		floaterIndex++;
+	constructor(id, src, origin, dim) {
+		this.id = id;
 		
 		// Set properties
 		this.src = src;
-		this.dim = [Math.round(Math.random()*500+500), Math.round(Math.random()*500+500)]; // width, height
-		this.origin = [Math.random()*windowWidth*20 - windowWidth*10, Math.random()*windowHeight*20 - windowHeight*10]; // x, y
+		this.dim = dim; // width
+		this.origin = origin; // x, y
 		this.pos = this.origin;
 		this.rot = Math.round(Math.random()*30-15);
-		this.acc = parseFloat((Math.random()+.5).toFixed(2));
-		this.opacity = 1;
+		this.acc = parseFloat((Math.random()*2+.2).toFixed(2));
+		this.opacity = parseFloat((Math.random()*.3+.7).toFixed(2));
 		this.visible = true;
 		this.trackerVisible = true;
 		this.trackerScale = 50;
@@ -54,8 +51,7 @@ class Floater {
 
 		// Create element
 		let floater = document.createElement("div");
-		// floater.style.backgroundImage = `url("${this.src}")`;
-		floater.style.backgroundColor = `rgba(255,255,255,.1)`;
+		floater.style.backgroundImage = `url("${this.src}")`;
 		floater.id = "floater"+this.id;
 		floater.dataset.id = this.id;
 		floater.classList.add("floater");
@@ -112,7 +108,6 @@ class Floater {
 		]
 
 		// Hide floater if far enough offscreen
-
 		if (bounds[1] >= -windowWidth/2-500 && bounds[3] <= windowWidth/2+500 && bounds[2] >= -windowHeight/2-500 && bounds[0] <= windowHeight/2+500) {
 			if (this.dom.style.display == "none") {
 				this.dom.style.display = "block";
@@ -189,6 +184,63 @@ class Floater {
 			this.tracker.style.display = "none";
 		}
 	}
+}
+
+// Draggable elements
+function grabFloater(floater) {
+	let id = floater.dataset.id;
+	let floaterObject = floaters[id];
+	let offsetMovement;
+	// Account for change in mouse position
+	let prevMousePos = [0, 0];
+	let deltaMousePos = [0, 0];
+	// Account for change in main position
+	let prevPos = [0, 0];
+	let deltaPos = [0, 0];
+	floater.addEventListener("mousedown", grabMouseDown);
+	
+	function grabMouseDown(e) {
+		resetMouse();
+		prevMousePos = [e.clientX, e.clientY];
+		prevPos = pos;
+		document.addEventListener("mouseup", closeGrabFloater);
+		document.addEventListener("wheel", closeGrabFloater);
+		document.addEventListener("mousemove", dragFloater);
+
+		// Compensate for main movement
+		offsetMovement = setInterval(() => {
+			deltaPos = [
+				prevPos[0] - pos[0],
+				prevPos[1] - pos[1]
+			]
+			floaterObject.shift(-deltaPos[0]*floaterObject.acc, -deltaPos[1]*floaterObject.acc);
+			prevPos = pos;
+		}, 17)
+	}
+
+	function dragFloater(e) {
+		deltaMousePos = [
+			prevMousePos[0] - e.clientX,
+			prevMousePos[1] - e.clientY
+		]
+		floaterObject.shift(deltaMousePos[0]/zoomLevel, deltaMousePos[1]/zoomLevel);
+		prevMousePos = [e.clientX, e.clientY];
+	}
+
+	function closeGrabFloater() {
+		clearInterval(offsetMovement);
+		document.removeEventListener("mouseup", closeGrabFloater);
+		document.removeEventListener("mousemove", dragFloater);
+	}
+}
+
+// Generate floaters
+let index = 0;
+while (index<500) {
+	let floater = new Floater(index, `assets/maps/map${Math.floor(Math.random()*97)}.jpg`, [Math.round(Math.random()*10000-5000), Math.round(Math.random()*10000-5000)], [Math.round(Math.random()*1000+100), Math.round(Math.random()*1000+100)]);
+	floaters[index] = floater;
+	grabFloater(floater.dom);
+	index++;
 }
 
 // Get mouse position relative to screen
@@ -288,103 +340,6 @@ function resetMouse() {
 	backgroundS.style.opacity = 0;
 	backgroundW.style.opacity = 0;
 }
-container.addEventListener("mousemove", trackMouse);
-window.addEventListener("resize", resetMouse);
-
-// Main loop
-setInterval(() => {
-	// Adjust main position and background
-	pos = [
-		parseFloat((pos[0]-vel[0]*10).toFixed(5)),
-		parseFloat((pos[1]-vel[1]*10).toFixed(5))
-	]
-	content.style.backgroundPosition = `${pos[0]/5}px ${pos[1]/5}px`;
-
-	// Move paths
-	paths.style.transform = `translate(calc(${pos[0]}px - 50%), calc(${pos[1]}px - 50%))`;
-
-	// Adjust velocity toward target velocity
-	vel = [
-		parseFloat((vel[0]-((vel[0]-targetVel[0])/100)).toFixed(5)),
-		parseFloat((vel[1]-((vel[1]-targetVel[1])/100)).toFixed(5)),
-	]
-
-	// Prevent velocity from exceeding max velocity
-	// x velocity
-	if (vel[0] > maxVel) {
-		vel[0] = maxVel;
-	} else if (vel[0] < -maxVel) {
-		vel[0] = -maxVel;
-	}
-	// y velocity
-	if (vel[1] > maxVel) {
-		vel[1] = maxVel;
-	} else if (vel[1] < -maxVel) {
-		vel[1] = -maxVel;
-	}
-
-	// Move objects
-	for (let floater of Object.keys(floaters)) {
-		floaters[floater].move();
-	}
-
-	// Set UI values
-	uiX.innerText = -pos[0].toFixed(2);
-	uiY.innerText = -pos[1].toFixed(2);
-	uiVelX.innerText = vel[0].toFixed(2);
-	uiVelY.innerText = vel[1].toFixed(2);
-	uiTargetVelX.innerText = targetVel[0].toFixed(2);
-	uiTargetVelY.innerText = targetVel[1].toFixed(2);
-	uiScale.innerText = zoomLevel.toFixed(2);
-}, 17); // 60fps
-
-// Draggable elements
-function grabFloater(floater) {
-	let id = floater.dataset.id;
-	let floaterObject = floaters[id];
-	let offsetMovement;
-	// Account for change in mouse position
-	let prevMousePos = [0, 0];
-	let deltaMousePos = [0, 0];
-	// Account for change in main position
-	let prevPos = [0, 0];
-	let deltaPos = [0, 0];
-	floater.addEventListener("mousedown", grabMouseDown);
-	
-	function grabMouseDown(e) {
-		resetMouse();
-		prevMousePos = [e.clientX, e.clientY];
-		prevPos = pos;
-		document.addEventListener("mouseup", closeGrabFloater);
-		document.addEventListener("wheel", closeGrabFloater);
-		document.addEventListener("mousemove", dragFloater);
-
-		// Compensate for main movement
-		offsetMovement = setInterval(() => {
-			deltaPos = [
-				prevPos[0] - pos[0],
-				prevPos[1] - pos[1]
-			]
-			floaterObject.shift(-deltaPos[0]*floaterObject.acc, -deltaPos[1]*floaterObject.acc);
-			prevPos = pos;
-		}, 17)
-	}
-
-	function dragFloater(e) {
-		deltaMousePos = [
-			prevMousePos[0] - e.clientX,
-			prevMousePos[1] - e.clientY
-		]
-		floaterObject.shift(deltaMousePos[0]/zoomLevel, deltaMousePos[1]/zoomLevel);
-		prevMousePos = [e.clientX, e.clientY];
-	}
-
-	function closeGrabFloater() {
-		clearInterval(offsetMovement);
-		document.removeEventListener("mouseup", closeGrabFloater);
-		document.removeEventListener("mousemove", dragFloater);
-	}
-}
 
 // Scroll to zoom
 let zoomStep = 0.01;
@@ -403,65 +358,204 @@ function zoom(e) {
 		}
 	}
 	content.style.transform = `translate(-50%, -50%) scale(${zoomLevel})`;
-}
-container.addEventListener("wheel", zoom);
 
-// Generate floaters
-let targets = [];
-for (let i=0; i<floaterCount; i++) {
-	let floater = new Floater(``);
-	floaters[i] = floater;
-	targets.push(floaters[i].origin);
-	grabFloater(floater.dom);
+	// Set volume and reverb according to zoom
+	let zoomAudio = (zoomLevel - .25) / (2 - .25); // 0–1, 1 is most zoomed
+	reverb.wet.value = parseFloat((1 - zoomAudio)).toFixed(2);
+	reverb.decay.value = parseFloat((1 - zoomAudio)*20).toFixed(2);
+	reverb.preDelay = parseFloat((20 - zoomAudio*20)).toFixed(2);
+	player.volume.value = parseFloat((zoomAudio*10 - 10)).toFixed(2);
 }
 
 // Generate paths
-function generatePath(endPos) {
+function generatePath(endPos, total) {
 	// Set max dimensions and start at center
 	let dim = Math.floor(Math.max(Math.abs(endPos[0]), Math.abs(endPos[1]))*1.5);
-	let pointPos = [dim, dim];
 
 	// Start SVG as HTML string
-	let path = `<svg class="path" style="width:${dim*2}px; height:${dim*2}px;" viewBox="0 0 ${dim*2} ${dim*2}"><filter id="displacementFilter"><feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence" /><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" /></filter><path d="m ${dim},${dim} `
+	let path = `<svg class="path" style="width:${dim*2}px; height:${dim*2}px;" viewBox="0 0 ${dim*2} ${dim*2}"><filter id="displacementFilter"><feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="2" result="turbulence" /><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" /></filter>`
 
-	// Set intermediary targets
-	// let targets = [];
-	// for (let i=0; i<Math.floor(Math.random()*5); i++) {
-	// 	targets.push([Math.floor(Math.random()*dim*2), Math.floor(Math.random()*dim*2)]);
-	// }
-	// targets.push([dim/2+endPos[0], dim/2+endPos[1]]);
+	for (let iteration=0; iteration<total; iteration++) {
+		let pointPos = [dim, dim];
+		path += `<path d="m ${dim},${dim} `;
 
-	// Draw points until target is reached
-	for (let target of targets) {
-		let reachEnd = false;
-		while (!reachEnd) {
-			let prevPoint = pointPos;
-			if (pointPos[0] < target[0]) {
-				pointPos = [Math.round((pointPos[0]+Math.random()*300)), pointPos[1]];
-			} else {
-				pointPos = [Math.round((pointPos[0]-Math.random()*300)), pointPos[1]];
-			}
-			if (pointPos[1] < target[1]) {
-				pointPos = [pointPos[0], Math.round((pointPos[1]+Math.random()*300))];
-			} else {
-				pointPos = [pointPos[0], Math.round((pointPos[1]-Math.random()*300))];
-			}
-
-			let distance = [prevPoint[0]-pointPos[0], prevPoint[1]-pointPos[1]];
+		// Set intermediary targets
+		let targets = [];
+		for (let i=0; i<Math.floor(Math.random()*5); i++) {
+			targets.push([Math.floor(Math.random()*dim*2), Math.floor(Math.random()*dim*2)]);
+		}
+		targets.push([dim/2+endPos[0], dim/2+endPos[1]]);
 	
-			path += `
-				C ${pointPos[0]},${pointPos[1]}
-				${Math.round((prevPoint[0]+Math.random()*distance[0]))},${Math.round((prevPoint[1]+Math.random()*distance[1]))}
-				${Math.round((pointPos[0]-Math.random()*distance[0]))},${Math.round((pointPos[1]-Math.random()*distance[1]))}
-			`;
+		// Draw points until target is reached
+		for (let t of targets) {
+			let target = [t[0], t[1]];
+			let reachEnd = false;
+			while (!reachEnd) {
+				let prevPoint = pointPos;
+				if (pointPos[0] < target[0]) {
+					pointPos = [Math.round((pointPos[0]+Math.random()*300)), pointPos[1]];
+				} else {
+					pointPos = [Math.round((pointPos[0]-Math.random()*300)), pointPos[1]];
+				}
+				if (pointPos[1] < target[1]) {
+					pointPos = [pointPos[0], Math.round((pointPos[1]+Math.random()*300))];
+				} else {
+					pointPos = [pointPos[0], Math.round((pointPos[1]-Math.random()*300))];
+				}
 	
-			if (Math.abs(pointPos[0]-target[0]) < 200 && Math.abs(pointPos[1]-target[1]) < 200) {
-				reachEnd = true;
+				let distance = [prevPoint[0]-pointPos[0], prevPoint[1]-pointPos[1]];
+		
+				path += `
+					C ${pointPos[0]},${pointPos[1]}
+					${Math.round((prevPoint[0]+Math.random()*distance[0]))},${Math.round((prevPoint[1]+Math.random()*distance[1]))}
+					${Math.round((pointPos[0]-Math.random()*distance[0]))},${Math.round((pointPos[1]-Math.random()*distance[1]))}
+				`;
+		
+				if (Math.abs(pointPos[0]-target[0]) < 200 && Math.abs(pointPos[1]-target[1]) < 200) {
+					reachEnd = true;
+				}
 			}
 		}
+
+		path += `" pathLength="1" />`
 	}
 
-	path += `" pathLength="1" /></svg>`
+	path += `"</svg>`
 	paths.innerHTML += path;
 }
-// generatePath([Math.random()*10000, Math.random()*10000]);
+// generatePath([Math.random()*10000, Math.random()*10000], 3);
+// generatePath([Math.random()*10000, Math.random()*10000], 3);
+// generatePath([Math.random()*10000, Math.random()*10000], 3);
+
+// Main loop
+let reverb = new Tone.Reverb().toDestination();
+let player = new Tone.Player({
+	url: `assets/atmospheres/street3.mp3`,
+	loop: true,
+	volume: 6,
+}).connect(reverb);
+function begin() {
+	// Hide handshake
+	let intro = document.querySelector("#intro");
+	intro.style.display = "none";
+
+	// Start audio
+	Tone.start();
+	player.volume.value = 0;
+	player.start();
+
+	// Begin tracking mouse
+	// container.addEventListener("mousemove", trackMouse);
+	window.addEventListener("resize", resetMouse);
+	startTour();
+	// container.addEventListener("wheel", zoom);
+
+	// Start main loop
+	setInterval(() => {
+		// Adjust main position and background
+		pos = [
+			parseFloat((pos[0]-vel[0]*15).toFixed(5)),
+			parseFloat((pos[1]-vel[1]*15).toFixed(5))
+		]
+		content.style.backgroundPosition = `${pos[0]/5}px ${pos[1]/5}px`;
+	
+		// Move paths
+		paths.style.transform = `translate(calc(${pos[0]}px - 50%), calc(${pos[1]}px - 50%))`;
+	
+		// Adjust velocity toward target velocity
+		vel = [
+			parseFloat((vel[0]-((vel[0]-targetVel[0])/100)).toFixed(5)),
+			parseFloat((vel[1]-((vel[1]-targetVel[1])/100)).toFixed(5)),
+		]
+	
+		// Set velocity to 0 when small enough
+		// x velocity
+		if (vel[0] < .001 && vel[0] > -.001) {
+			vel = [0, vel[1]];
+		}
+		// y velocity
+		if (vel[1] < .001 && vel[1] > -.001) {
+			vel = [vel[0], 0];
+		}
+	
+		// Move objects
+		for (let floater of Object.keys(floaters)) {
+			floaters[floater].move();
+		}
+	
+		// Set UI values
+		uiX.innerText = -pos[0].toFixed(2);
+		uiY.innerText = -pos[1].toFixed(2);
+		uiVelX.innerText = vel[0].toFixed(2);
+		uiVelY.innerText = vel[1].toFixed(2);
+		uiTargetVelX.innerText = targetVel[0].toFixed(2);
+		uiTargetVelY.innerText = targetVel[1].toFixed(2);
+		uiScale.innerText = zoomLevel.toFixed(2);
+	}, 17); // 60fps	
+}
+
+// Automation
+function startTour() {
+	let arrived = [false, false];
+	let target = [Math.round(Math.random()*8000-4000), Math.round(Math.random()*8000-4000)];
+	console.log(target);
+	let loop = setInterval(() => {
+		// Check for arrival x
+		if (Math.abs(pos[0]-target[0]) < 100) {
+			targetVel = [0, targetVel[1]];
+			arrived = [true, arrived[1]];
+		} else {
+			if (pos[0] < target[0]) {
+				targetVel = [-(Math.random()*.5+.5), targetVel[1]];
+			} else {
+				targetVel = [Math.random()*.5+.5, targetVel[1]];
+			}
+		}
+
+		// Check for arrival y
+		if (Math.abs(pos[1]-target[1]) < 100) {
+			targetVel = [targetVel[0], 0];
+			arrived = [arrived[0], true];
+		} else {
+			if (pos[1] < target[1]) {
+				targetVel = [targetVel[0], -(Math.random()*.5+.5)];
+			} else {
+				targetVel = [targetVel[0], Math.random()*.5+.5];
+			}
+		}
+
+		// Restart
+		if (arrived[0] == true && arrived[1] == true) {
+			clearInterval(loop);
+			targetVel = [0, 0];
+			setTimeout(() => {
+				simulateZoom();
+			}, 10000)
+		}
+	}, 500)
+}
+
+function simulateZoom() {
+	let targetZoom = Math.random()*1.75+.25;
+	let loop = setInterval(() => {
+		if (Math.abs(zoomLevel - targetZoom) < .02) {
+			clearInterval(loop);
+			setTimeout(() => {
+				startTour();
+			}, 3000)
+		} else if (zoomLevel < targetZoom) {
+			zoomLevel += .01;
+		} else {
+			zoomLevel -= .01;
+		}
+
+		content.style.transform = `translate(-50%, -50%) scale(${zoomLevel})`;
+	
+		// Set volume and reverb according to zoom
+		let zoomAudio = (zoomLevel - .25) / (2 - .25); // 0–1, 1 is most zoomed
+		reverb.wet.value = parseFloat((1 - zoomAudio)).toFixed(2);
+		reverb.decay.value = parseFloat((1 - zoomAudio)*20).toFixed(2);
+		reverb.preDelay = parseFloat((20 - zoomAudio*20)).toFixed(2);
+		player.volume.value = parseFloat((zoomAudio*10 - 10)).toFixed(2);
+	}, 17)
+}
