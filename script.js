@@ -43,7 +43,7 @@ class Floater {
 		this.pos = this.origin;
 		this.rot = Math.round(Math.random()*30-15);
 		this.acc = parseFloat((Math.random()*2+.2).toFixed(2));
-		this.opacity = parseFloat((Math.random()*.3+.7).toFixed(2));
+		this.opacity = parseFloat((Math.random()*.3+.5).toFixed(2));
 		this.visible = true;
 		this.trackerVisible = true;
 		this.trackerScale = 50;
@@ -237,7 +237,7 @@ function grabFloater(floater) {
 // Generate floaters
 let index = 0;
 while (index<500) {
-	let floater = new Floater(index, `assets/maps/map${Math.floor(Math.random()*97)}.jpg`, [Math.round(Math.random()*10000-5000), Math.round(Math.random()*10000-5000)], [Math.round(Math.random()*1000+100), Math.round(Math.random()*1000+100)]);
+	let floater = new Floater(index, `assets/maps/map${Math.floor(Math.random()*195)}.jpg`, [Math.round(Math.random()*8000-4000), Math.round(Math.random()*8000-4000)], [Math.round(Math.random()*800+100), Math.round(Math.random()*800+100)]);
 	floaters[index] = floater;
 	grabFloater(floater.dom);
 	index++;
@@ -430,7 +430,7 @@ function generatePath(endPos, total) {
 // Main loop
 let reverb = new Tone.Reverb().toDestination();
 let player = new Tone.Player({
-	url: `assets/atmospheres/street3.mp3`,
+	url: `assets/city.mp3`,
 	loop: true,
 	volume: 6,
 }).connect(reverb);
