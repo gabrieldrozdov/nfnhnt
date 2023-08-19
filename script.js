@@ -445,10 +445,10 @@ function begin() {
 	player.start();
 
 	// Begin tracking mouse
-	// container.addEventListener("mousemove", trackMouse);
+	container.addEventListener("mousemove", trackMouse);
 	window.addEventListener("resize", resetMouse);
-	startTour();
-	// container.addEventListener("wheel", zoom);
+	container.addEventListener("wheel", zoom);
+	// startTour();
 
 	// Start main loop
 	setInterval(() => {
