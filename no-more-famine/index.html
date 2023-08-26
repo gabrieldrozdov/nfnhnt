@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>No More Famine</title>
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+		.container {
+			width: 100vw;
+			height: 100vh;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			display: flex;
+			background-image: url("no-more-famine.jpg");
+			background-size: cover;
+			background-position: center;
+		}
+		.content {
+			position: relative;
+			display: flex;
+			align-items: stretch;
+			height: 100%;
+			flex: 0 0 auto;
+		}
+		.milk {
+			height: 100%;
+		}
+		.person {
+			position: absolute;
+			left: 50%;
+			bottom: -10%;
+			transform: translate(-50%);
+			height: 80%;
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+		<div class="content">
+			<img class="milk" src="no-more-famine.jpg">
+			<img class="person" src="person1.png">
+		</div>
+		<div class="content">
+			<img class="milk" src="no-more-famine.jpg">
+			<img class="person" src="person2.png">
+		</div>
+		<div class="content">
+			<img class="milk" src="no-more-famine.jpg">
+			<img class="person" src="person3.png">
+		</div>
+		<div class="content">
+			<img class="milk" src="no-more-famine.jpg">
+			<img class="person" src="person4.png">
+		</div>
+		<div class="content">
+			<img class="milk" src="no-more-famine.jpg">
+			<img class="person" src="person5.png">
+		</div>
+	</main>
+
+	<script>
+		window.onload = function() {
+			let container = document.querySelector('.container');
+			let content = document.querySelectorAll('.content');
+			let containerWidth = container.offsetWidth;
+			let contentWidth = 0;
+
+			for (let i = 0; i < content.length; i++) {
+				contentWidth += content[i].offsetWidth;
+			}
+
+			container.scrollLeft = (content[0].offsetWidth / 2) - (containerWidth / 2);
+
+			container.addEventListener('scroll', function() {
+				if (container.scrollLeft + containerWidth >= contentWidth-1) {
+					// move the first content element to the end of the container
+					let firstContent = container.firstElementChild;
+					container.appendChild(firstContent);
+					container.scrollLeft -= firstContent.offsetWidth;
+				} else if (container.scrollLeft <= 0) {
+					// move the last content element to the beginning of the container
+					let lastContent = container.lastElementChild;
+					container.prepend(lastContent);
+					container.scrollLeft = lastContent.offsetWidth;
+				}
+			});
+		}
+	</script>
+</body>
+</html>

@@ -3,36 +3,130 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Notes From Neither Here Nor There</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+	<link rel="icon" type="image/png" href="assets/ui/favicon.png" />
 </head>
 <body>
-	<div id="intro" onclick="begin();">
-		<h1>NOTES FROM NEITHER HERE NOR THERE</h1>
-		<h2>CLICK TO ENTER</h2>
-	</div>
-	<main id="container">
-		<div id="ui">
-			<div class="ui-x ui0">0</div>
-			<div class="ui-y ui1">0</div>
-			<div class="ui-velX ui0">0</div>
-			<div class="ui-velY ui1">0</div>
-			<div class="ui-targetVelX ui0">0</div>
-			<div class="ui-targetVelY ui1">0</div>
-			<div class="ui-scale ui0">1</div>
+	<!-- Overlays -->
+	<img src="assets/ui/grain.jpg" class="grain">
+	<div class="vignette"></div>
+	<div class="arrows"></div>
+
+	<header class="body">
+		<h1 class="title">
+			<span class="title-line">
+				<span>Notes</span>
+				<img class="text-img" src="assets/ui/circle.gif">
+			</span>
+			<span class="title-line">
+				<span>from</span>
+			</span>
+			<span class="title-line">
+				<span>Neither</span>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</span>
+			<span class="title-line">
+				<span class="shuffle animate">Here</span>
+			</span>
+			<span class="title-line">
+				<span>nor</span>
+				<img class="text-img" src="assets/ui/scribble.gif">
+			</span>
+			<span class="title-line">
+				<span class="shuffle animate">There</span>
+			</span>
+		</h1>
+
+		<div class="essay">
+			<p>
+				You are <span class="text-relative"><img class="text-img" src="assets/ui/circle.gif"><span class="shuffle animate">here</span></span>.
+			</p>
+			<p>
+				Or rather, <span class="text-relative"><img class="text-img" src="assets/ui/underline.gif"><span class="shuffle animate">here</span></span> for you, <span class="text-relative"><img class="text-img" src="assets/ui/underline.gif"><span class="shuffle animate">there</span></span> for me.
+			</p>
+			<p>
+				It’s a little bit of <span class="text-relative"><img class="text-img" src="assets/ui/scribble.gif"><span class="shuffle animate">here</span></span> for both of us. This is a website, which is a sort of place, and it’s something we can share. So even if I’m <span class="shuffle animate">here</span>, and you’re <span class="shuffle animate">there</span>, we’re almost together.
+			</p>
+			<p>
+				It’s a little bit of <span class="text-relative"><img class="text-img" src="assets/ui/scribble.gif"><span class="shuffle animate">there</span></span> for both of us, too. This website is somewhere else, hosted on a computer in a datacenter. So even if you’re <span class="shuffle animate">here</span>, and I’m <span class="shuffle animate">here</span>, neither of us are fully <span class="shuffle animate">there</span>.
+			</p>
+			<p>
+				It’s not too hard to think about websites in these terms. You might disagree. If you’re at least my age, you grew up in a world without websites, and then one with websites. But if you’re younger, maybe websites are more embedded in your worldview, or maybe they’re passé. But no matter your age, websites are things you navigate to and explore within.
+			</p>
+			<p>
+				Real places are like that, too. Are websites real places?
+			</p>
+			<p>
+				When you visit a place, you might take photos of it. And when you leave a place, you might revisit those photos. You might recall memories of being <span class="shuffle animate">there</span>. It might feel like you’re back <span class="shuffle animate">there</span>. But you’re not, although you’re not <span class="shuffle animate">here</span> anymore, either.
+			</p>
+			<p>
+				This website is one of those in-between places. You might forget where you are, neither <span class="text-relative"><img class="text-img" src="assets/ui/underline.gif"><span class="shuffle animate">here</span></span> nor <span class="text-relative"><img class="text-img" src="assets/ui/underline.gif"><span class="shuffle animate">there</span></span>. You might forget that this is a website. You might forget where you’re sitting, or who you’re sitting with. You might see an image and feel yourself in it. Or you might feel nothing at all.
+			</p>
 		</div>
-		<div id="background-n" class="background-gradient"></div>
-		<div id="background-e" class="background-gradient"></div>
-		<div id="background-s" class="background-gradient"></div>
-		<div id="background-w" class="background-gradient"></div>
-		<div id="trackers"></div>
-		<div id="vignette"></div>
-		<div id="content">
-			<div id="paths"></div>
-		</div>
+	</header>
+
+	<main class="catalog">
+		<a href="no-more-famine" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">No more famine</h2>
+				<p class="catalog-title-drawn shuffle animate">No more famine</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/circle.gif">
+		</a>
+		<a href="johnst" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">Three perspectives on John St</h2>
+				<p class="catalog-title-drawn shuffle animate">Three perspectives on John St</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/scribble.gif">
+		</a>
+		<a href="sidewalks" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">Sidewalks</h2>
+				<p class="catalog-title-drawn shuffle animate">Sidewalks</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/circle.gif">
+		</a>
+		<a href="many-ways-to-walk" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">There are many ways to take a walk</h2>
+				<p class="catalog-title-drawn shuffle animate">There are many ways to take a walk</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/scribble.gif">
+		</a>
+		<a href="highway" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">A fence fractures the highway</h2>
+				<p class="catalog-title-drawn shuffle animate">A fence fractures the highway</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/circle.gif">
+		</a>
+		<a href="dairy" class="catalog-link">
+			<img src="assets/thumbnails/test.png" class="catalog-preview">
+			<div class="catalog-title">
+				<h2 class="catalog-title-serif">Stories from the dairy aisle</h2>
+				<p class="catalog-title-drawn shuffle animate">Stories from the dairy aisle</p>
+				<img class="text-img" src="assets/ui/underline.gif">
+			</div>
+			<img class="catalog-emphasis" src="assets/ui/scribble.gif">
+		</a>
 	</main>
+
+	<footer>
+		A series of sites by&nbsp; <a href="https://www.gabrieldrozdov.com/" target="_blank" class="shuffle animate">Gabriel Drozdov</a>
+	</footer>
 	
 	<script src="script.js"></script>
 </body>

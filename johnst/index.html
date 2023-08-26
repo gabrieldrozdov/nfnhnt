@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>John St.</title>
+
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+		body {
+			background-color: black;
+			overflow: hidden;
+		}
+		.container {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			gap: 40px;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		.title {
+			width: 100%;
+			max-width: 150px;
+		}
+		.photo {
+			width: 100%;
+			max-width: 1000px;
+		}
+		.map {
+			width: 100%;
+			max-width: 400px;
+		}
+		.grain {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 120vw;
+			height: 120vh;
+			animation-name: grain;
+			animation-duration: 1s;
+			animation-iteration-count: infinite;
+			animation-timing-function: steps(4);
+			mix-blend-mode:multiply;
+			opacity: .2;
+			pointer-events: none;
+		}
+		@keyframes grain {
+			0% {
+				left: -20vw;
+				top: -20vh;
+			}
+			33% {
+				left: 0vw;
+				top: -20vh;
+			}
+			66% {
+				left: 0vw;
+				top: 0vh;
+			}
+			100% {
+				left: -20vw;
+				top: 0vh;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+		<img src="title.gif" class="title">
+		<img src="imgs/johnst0.jpg" class="photo">
+		<img src="maps/map0.gif" class="map">
+		<img src="grain.jpg" class="grain">
+	</main>
+
+	<script>
+		let container = document.querySelector(".container");
+		let photo = document.querySelector(".photo");
+		let map = document.querySelector(".map");
+		container.addEventListener("wheel", imgChange);
+
+		let imgIndex = 0;
+		let currentMap = 0;
+		let mapIndex = 0;
+		let cooldown = 0;
+
+		// prevent scrolling too quickly
+		setInterval(() => {
+			if (cooldown > 0) {
+				cooldown --;
+			}
+		}, 50)
+
+		// function called on scroll
+		function imgChange(event) {
+			// change image
+			if (event.deltaY > 2 && cooldown == 0) {
+				cooldown = 3;
+				imgIndex --;
+				if (imgIndex < 0) {
+					imgIndex = 39;
+				}
+			} else if (event.deltaY < -2 && cooldown == 0) {
+				cooldown = 3;
+				imgIndex ++;
+				if (imgIndex > 39) {
+					imgIndex = 0;
+				}
+			}
+			photo.src = `imgs/johnst${imgIndex}.jpg`;
+
+			// set map animation
+			if (imgIndex <= 1) {
+				mapIndex = 0;
+			} else if (imgIndex <= 4) {
+				mapIndex = 1;
+			} else if (imgIndex <= 5) {
+				mapIndex = 2;
+			} else if (imgIndex <= 7) {
+				mapIndex = 3;
+			} else if (imgIndex <= 13) {
+				mapIndex = 4;
+			} else if (imgIndex <= 15) {
+				mapIndex = 5;
+			} else if (imgIndex <= 17) {
+				mapIndex = 6;
+			} else if (imgIndex <= 18) {
+				mapIndex = 7;
+			} else if (imgIndex <= 20) {
+				mapIndex = 8;
+			} else if (imgIndex <= 21) {
+				mapIndex = 9;
+			} else if (imgIndex <= 23) {
+				mapIndex = 10;
+			} else if (imgIndex <= 25) {
+				mapIndex = 11;
+			} else if (imgIndex <= 26) {
+				mapIndex = 12;
+			} else if (imgIndex <= 28) {
+				mapIndex = 13;
+			} else if (imgIndex <= 30) {
+				mapIndex = 14;
+			} else if (imgIndex <= 32) {
+				mapIndex = 15;
+			} else if (imgIndex <= 34) {
+				mapIndex = 16;
+			} else if (imgIndex <= 35) {
+				mapIndex = 17;
+			} else if (imgIndex <= 36) {
+				mapIndex = 18;
+			} else if (imgIndex <= 38) {
+				mapIndex = 19;
+			} else if (imgIndex <= 39) {
+				mapIndex = 20;
+			}
+			if (mapIndex != currentMap) {
+				currentMap = mapIndex;
+				map.src = `maps/map${mapIndex}.gif`;
+			}
+		}
+	</script>
+</body>
+</html>
