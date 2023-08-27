@@ -4,93 +4,66 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>No More Famine</title>
-	<style>
-		* {
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-		}
-		.container {
-			width: 100vw;
-			height: 100vh;
-			overflow-x: scroll;
-			overflow-y: hidden;
-			display: flex;
-			background-image: url("no-more-famine.jpg");
-			background-size: cover;
-			background-position: center;
-		}
-		.content {
-			position: relative;
-			display: flex;
-			align-items: stretch;
-			height: 100%;
-			flex: 0 0 auto;
-		}
-		.milk {
-			height: 100%;
-		}
-		.person {
-			position: absolute;
-			left: 50%;
-			bottom: -10%;
-			transform: translate(-50%);
-			height: 80%;
-		}
-	</style>
+	<title>NfNHnT // No More Famine</title>
+
+	<meta name="author" content="Gabriel Drozdov">
+	<meta name="keywords" content="HTML, CSS, JavaScript, Creative Coding, Poetry">
+	<meta name="description" content="You are here. Or rather, here for you, there for me.">
+	<meta property="og:url" content="https://notes.noreplica.com/">
+	<meta name="og:title" property="og:title" content="Notes from Neither Here nor There">
+	<meta property="og:description" content="You are here. Or rather, here for you, there for me.">
+	<meta property="og:image" content="/assets/ui/opengraph.jpg">
+	<link rel="icon" type="image/png" href="/assets/ui/favicon.png">
+
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<main class="container">
-		<div class="content">
-			<img class="milk" src="no-more-famine.jpg">
-			<img class="person" src="person1.png">
+	<div class="container">
+		<img src="../assets/ui/grain.jpg" class="grain">
+		<div class="vignette"></div>
+	
+		<a class="return" href="/">
+			NfN<span class="shuffle animate">H</span>n<span class="shuffle animate">T</span>
+			<img src="/assets/ui/encircle.gif" class="return-circle">
+		</a>
+	
+		<h1 class="page-title">
+			<span class="shuffle animate">No more famine</span>
+			<img src="/assets/ui/underline.gif" class="page-title-underline">
+		</h1>
+	
+		<div class="instructions">
+			<img src="/assets/ui/arrow-w.gif">
+			<p>Scroll</p>
+			<img src="/assets/ui/arrow-e.gif">
 		</div>
-		<div class="content">
-			<img class="milk" src="no-more-famine.jpg">
-			<img class="person" src="person2.png">
-		</div>
-		<div class="content">
-			<img class="milk" src="no-more-famine.jpg">
-			<img class="person" src="person3.png">
-		</div>
-		<div class="content">
-			<img class="milk" src="no-more-famine.jpg">
-			<img class="person" src="person4.png">
-		</div>
-		<div class="content">
-			<img class="milk" src="no-more-famine.jpg">
-			<img class="person" src="person5.png">
-		</div>
-	</main>
+	
+		<main class="content content-in">
+			<div class="aisle">
+				<img class="milk" src="assets/no-more-famine.jpg">
+				<img class="person" src="assets/person1.png">
+			</div>
+			<div class="aisle">
+				<img class="milk" src="assets/no-more-famine.jpg">
+				<img class="person" src="assets/person2.png">
+			</div>
+			<div class="aisle">
+				<img class="milk" src="assets/no-more-famine.jpg">
+				<img class="person" src="assets/person3.png">
+			</div>
+			<div class="aisle">
+				<img class="milk" src="assets/no-more-famine.jpg">
+				<img class="person" src="assets/person4.png">
+			</div>
+			<div class="aisle">
+				<img class="milk" src="assets/no-more-famine.jpg">
+				<img class="person" src="assets/person5.png">
+			</div>
+		</main>
+	</div>
 
-	<script>
-		window.onload = function() {
-			let container = document.querySelector('.container');
-			let content = document.querySelectorAll('.content');
-			let containerWidth = container.offsetWidth;
-			let contentWidth = 0;
-
-			for (let i = 0; i < content.length; i++) {
-				contentWidth += content[i].offsetWidth;
-			}
-
-			container.scrollLeft = (content[0].offsetWidth / 2) - (containerWidth / 2);
-
-			container.addEventListener('scroll', function() {
-				if (container.scrollLeft + containerWidth >= contentWidth-1) {
-					// move the first content element to the end of the container
-					let firstContent = container.firstElementChild;
-					container.appendChild(firstContent);
-					container.scrollLeft -= firstContent.offsetWidth;
-				} else if (container.scrollLeft <= 0) {
-					// move the last content element to the beginning of the container
-					let lastContent = container.lastElementChild;
-					container.prepend(lastContent);
-					container.scrollLeft = lastContent.offsetWidth;
-				}
-			});
-		}
-	</script>
+	<script src="script.js"></script>
+	<script src="/caffeine.js"></script>
 </body>
 </html>
