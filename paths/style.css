@@ -1,0 +1,97 @@
+.content {
+	width: 100vw;
+	height: 100dvh;
+	overflow: hidden;
+	position: relative;
+}
+.walk-images {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100dvh;
+	background-position: 50% 50%;
+	background-size: cover;
+	transition: background-image 200ms, opacity 200ms;
+	pointer-events: none;
+}
+.walk-preload {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	z-index: -1;
+	pointer-events: none;
+}
+
+/* Steps */
+.walk-steps {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 9;
+	pointer-events: none;
+	transform: rotate(90deg);
+}
+.walk-steps-child {
+	transition: transform .4s cubic-bezier(0.16, 1, 0.3, 1), filter .4s, opacity .2s;
+	position: absolute;
+	width: 0;
+	height: 0;
+}
+.walk-steps-child-img {
+	height: var(--imgsize);
+	box-shadow: 0 0 100px rgba(0,0,0,.5);
+}
+
+/* Controls */
+.walk-controls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100dvh;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	z-index: 99;
+}
+.walk-controls-button {
+	opacity: 1;
+	transition: opacity .2s, background-color .2s, filter .2s;
+	background-color: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+.walk-controls-button img {
+	width: 80%;
+	max-width: 300px;
+	z-index: 9;
+	pointer-events: none;
+	filter: blur(2px);
+}
+.walk-circle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	transition: .2s;
+	max-width: 500px !important;
+	width: 90% !important;
+}
+.walk-controls-button:hover {
+	background-color: rgba(255,255,255,.1);
+}
+.walk-controls-button:hover .walk-circle {
+	opacity: .5;
+}
+.walk-controls-button:active {
+	opacity: .2;
+}
+.walk-controls-button[data-active="0"] {
+	opacity: 0;
+}

@@ -87,14 +87,14 @@ header {
 	opacity: 0;
 	filter: blur(10px);
 	padding-top: 25vh;
+	line-height: 1.5em;
+	font-size: 24px;
+	letter-spacing: .05em;
 }
 .essay p {
 	width: 100%;
 	max-width: 800px;
 	margin: 1.5em auto;
-	line-height: 1.5em;
-	font-size: 24px;
-	letter-spacing: .05em;
 }
 .text-relative {
 	position: relative;
@@ -140,7 +140,6 @@ header {
 	justify-content: center;
 }
 .catalog-title-serif {
-	letter-spacing: .1em;
 	font-size: 1.5vw;
 }
 .catalog-title-drawn {
@@ -215,6 +214,7 @@ footer a {
 		opacity: 1;
 		filter: unset;
 		padding-top: unset;
+		font-size: 18px;
 	}
 	.catalog {
 		gap: 15vh;
