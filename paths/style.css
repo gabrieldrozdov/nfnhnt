@@ -94,4 +94,5 @@
 }
 .walk-controls-button[data-active="0"] {
 	opacity: 0;
+	pointer-events: none;
 }
