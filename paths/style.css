@@ -65,6 +65,7 @@
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	cursor: pointer;
 }
 .walk-controls-button img {
 	width: 80%;
@@ -84,7 +85,10 @@
 	width: 90% !important;
 }
 .walk-controls-button:hover {
-	background-color: rgba(255,255,255,.1);
+	background: linear-gradient(to right, rgba(255,255,255,.8) 0%, transparent 100%);
+}
+.walk-controls-button:nth-child(2):hover {
+	background: linear-gradient(to left, rgba(255,255,255,.8) 0%, transparent 100%);
 }
 .walk-controls-button:hover .walk-circle {
 	opacity: .5;

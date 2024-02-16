@@ -239,32 +239,40 @@ function walkStepRemove(step) {
 	}, 650);
 }
 
-// Walking loop
-let speed = 1000;
-let multiplier = 0.95;
-let loop = false;
+// OLD: Walking loop
+// let speed = 1000;
+// let multiplier = 0.95;
+// let loop = false;
 
-function mainLoop() {
-	if (loop == true) {
-		walkStepNext();
-		setTimeout(() => {
-			mainLoop();
-			if (speed > 5) {
-				speed *= multiplier;
-			}
-		}, speed)
-	}
-}
+// function mainLoop() {
+// 	if (loop == true) {
+// 		walkStepNext();
+// 		setTimeout(() => {
+// 			mainLoop();
+// 			if (speed > 5) {
+// 				speed *= multiplier;
+// 			}
+// 		}, speed)
+// 	}
+// }
 
 let content = document.querySelector(".content");
-content.addEventListener('mousedown', (e) => {
+// content.addEventListener('mousedown', (e) => {
+// 	e.preventDefault();
+// 	loop = true;
+// 	mainLoop();
+// })
+// content.addEventListener('mouseup', () => {
+// 	speed = 1000;
+// 	loop = false;
+// })
+document.addEventListener('keydown', (e) => {
 	e.preventDefault();
-	loop = true;
-	mainLoop();
+	walkStepNext();
 })
-content.addEventListener('mouseup', () => {
-	speed = 1000;
-	loop = false;
+content.addEventListener('mousedown', (e) => {
+	// e.preventDefault();
+	walkStepNext();
 })
 
 content.addEventListener('touchstart', (e) => {

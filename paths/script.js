@@ -193,11 +193,6 @@ let preloadedSteps2 = [];
 function preloadSteps(targetDOM) {
 	let temp = "";
 	let stepDivide = 30;
-	if (activePath1Range > 100) {
-		stepDivide = 50;
-	} else if (activePath1Range > 200) {
-		stepDivide = 80;
-	}
 	if (targetDOM == walkDOM1) {
 		preloadedSteps1 = [];
 		for (let i=0; i<activePath1Range-1; i+=Math.floor(Math.random()*(activePath1Range/stepDivide)+1)) {
